@@ -21,20 +21,23 @@ export interface OrderItem {
   price: number
 }
 
+// Generate unique ID using timestamp and random number
+const generateUniqueId = () => {
+  return `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+}
+
 export default function AgentInteraction() {
   const [messages, setMessages] = useState<Message[]>([])
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [isRecording, setIsRecording] = useState(false)
-  const [messageCounter, setMessageCounter] = useState(0)
 
   const addMessage = (message: Omit<Message, "id" | "timestamp">) => {
     const newMessage: Message = {
       ...message,
-      id: `msg-${messageCounter}`,
+      id: generateUniqueId(),
       timestamp: new Date(),
     }
     setMessages((prev) => [...prev, newMessage])
-    setMessageCounter(prev => prev + 1)
   }
 
   const updateOrder = (items: OrderItem[]) => {

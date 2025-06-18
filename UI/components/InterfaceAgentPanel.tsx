@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import type { Message, OrderItem } from "./AgentInteraction"
 
 interface InterfaceAgentPanelProps {
@@ -9,33 +9,74 @@ interface InterfaceAgentPanelProps {
   onMessage: (message: Omit<Message, "id" | "timestamp">) => void
 }
 
+// API endpoint configuration
+const API_ENDPOINT = "http://localhost:8000/interface_agent"
+
 export default function InterfaceAgentPanel({ messages, orderItems, onMessage }: InterfaceAgentPanelProps) {
-  const [suggestions, setSuggestions] = useState<string[]>([])
   const [inputMessage, setInputMessage] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  // Auto-scroll to bottom when new messages are added
   useEffect(() => {
-    // Generate suggestions based on current order
-    if (orderItems.length > 0) {
-      setSuggestions(["Add garlic bread for $3.99?", "Upgrade to combo meal?", "Try our new dessert special!"])
-    }
-  }, [orderItems])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
-  const handleSuggestionClick = (suggestion: string) => {
-    onMessage({
-      speaker: "interface",
-      content: `Suggested: ${suggestion}`,
-      type: "response",
-    })
+  const sendToAPI = async (text: string) => {
+    try {
+      setIsLoading(true)
+      const response = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Error sending message to API:', error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (inputMessage.trim()) {
+      const userMessage = inputMessage.trim()
+      
+      // Add user message to chat
       onMessage({
         speaker: "user",
-        content: inputMessage.trim(),
+        content: userMessage,
         type: "response",
       })
+      
       setInputMessage("")
+
+      try {
+        // Send to API and get response
+        const apiResponse = await sendToAPI(userMessage)
+        
+        // Add API response as interface agent message
+        onMessage({
+          speaker: "interface",
+          content: `${apiResponse.message} - Received: ${apiResponse.received_text}`,
+          type: "response",
+        })
+      } catch (error) {
+        onMessage({
+          speaker: "interface",
+          content: "Error: Could not connect to the agent API. Please check if the server is running.",
+          type: "response",
+        })
+      }
     }
   }
 
@@ -55,10 +96,15 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
         </div>
         <h2 className="text-xl font-semibold text-gray-900">Interface Agent</h2>
         <p className="text-gray-600">Text based Agent</p>
+        {isLoading && (
+          <div className="mt-2">
+            <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">Processing...</span>
+          </div>
+        )}
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 mb-6 overflow-y-auto">
+      <div className="flex-1 mb-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 max-h-96 min-h-0 border border-gray-200 rounded-lg p-4 bg-gray-50">
         <div className="space-y-4">
           {messages
             .filter((m) => m.speaker === "interface" || m.speaker === "user")
@@ -67,8 +113,8 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
                 key={message.id} 
                 className={`rounded-lg p-4 ${
                   message.speaker === "user" 
-                    ? "bg-gray-50 ml-8" 
-                    : "bg-blue-50 mr-8"
+                    ? "bg-white ml-8 shadow-sm" 
+                    : "bg-blue-50 mr-8 shadow-sm"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -86,6 +132,8 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
                 <p className="text-gray-800">{message.content}</p>
               </div>
             ))}
+          {/* Invisible element to scroll to */}
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
@@ -98,35 +146,18 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type your message here..."
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            disabled={isLoading}
+            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
           />
           <button
             onClick={handleSendMessage}
-            disabled={!inputMessage.trim()}
+            disabled={!inputMessage.trim() || isLoading}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
-            Send
+            {isLoading ? "Sending..." : "Send"}
           </button>
         </div>
       </div>
-
-      {/* Order Suggestions */}
-      {suggestions.length > 0 && (
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Smart Suggestions</h3>
-          <div className="space-y-2">
-            {suggestions.map((suggestion, index) => (
-              <button
-                key={index}
-                onClick={() => handleSuggestionClick(suggestion)}
-                className="w-full text-left p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg border border-yellow-200 transition-colors cursor-pointer"
-              >
-                <span className="text-yellow-800">{suggestion}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   )
 }
