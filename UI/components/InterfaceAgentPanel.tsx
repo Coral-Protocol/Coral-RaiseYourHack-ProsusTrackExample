@@ -10,7 +10,7 @@ interface InterfaceAgentPanelProps {
 }
 
 // API endpoint configuration
-const API_ENDPOINT = "http://localhost:8000/interface_agent"
+const API_ENDPOINT = "http://localhost:8000"
 
 export default function InterfaceAgentPanel({ messages, orderItems, onMessage }: InterfaceAgentPanelProps) {
   const [inputMessage, setInputMessage] = useState("")
@@ -22,23 +22,57 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
+  // Poll for agent questions
+  useEffect(() => {
+    let isPolling = true;
+
+    const pollForQuestions = async () => {
+      while (isPolling) {
+        try {
+          const response = await fetch(`${API_ENDPOINT}/agent/question`)
+          
+          if (response.status === 200) {
+            const data = await response.json()
+            // Add agent's question to chat
+            onMessage({
+              speaker: "interface",
+              content: data.question,
+              type: "response",
+            })
+          } else if (response.status !== 204) {
+            console.error("Error polling for questions:", response.statusText)
+          }
+        } catch (error) {
+          console.error("Error polling for questions:", error)
+        }
+
+        // Wait before next poll
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
+    }
+
+    pollForQuestions()
+    return () => {
+      isPolling = false
+    }
+  }, [onMessage])
+
   const sendToAPI = async (text: string) => {
     try {
       setIsLoading(true)
-      const response = await fetch(API_ENDPOINT, {
+      const response = await fetch(`${API_ENDPOINT}/agent/response`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ response: text }),
       })
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json()
-      return data
+      return await response.json()
     } catch (error) {
       console.error('Error sending message to API:', error)
       throw error
@@ -61,19 +95,12 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
       setInputMessage("")
 
       try {
-        // Send to API and get response
-        const apiResponse = await sendToAPI(userMessage)
-        
-        // Add API response as interface agent message
-        onMessage({
-          speaker: "interface",
-          content: `${apiResponse.message} - Received: ${apiResponse.received_text}`,
-          type: "response",
-        })
+        // Send to API
+        await sendToAPI(userMessage)
       } catch (error) {
         onMessage({
           speaker: "interface",
-          content: "Error: Could not connect to the agent API. Please check if the server is running.",
+          content: "Error: Could not send response to the agent. Please try again.",
           type: "response",
         })
       }

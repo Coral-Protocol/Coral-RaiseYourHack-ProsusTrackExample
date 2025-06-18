@@ -12,9 +12,26 @@ from langchain_groq import ChatGroq
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain.tools import Tool
 from langchain_community.callbacks import get_openai_callback
+from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
+from typing import Optional
+import uvicorn
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+app = FastAPI(title="Interface Agent API")
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 load_dotenv()
 
@@ -28,6 +45,17 @@ query_string = urllib.parse.urlencode(params)
 MCP_SERVER_URL = f"{base_url}?{query_string}"
 AGENT_NAME = "user_interaction_agent"
 
+# Create a queue to store agent questions
+agent_question_queue = asyncio.Queue()
+agent_response_queue = asyncio.Queue()
+
+# Pydantic models for request/response
+class AgentResponse(BaseModel):
+    response: str
+
+class AgentQuestion(BaseModel):
+    question: str
+
 def get_tools_description(tools):
     return "\n".join(
         f"Tool: {tool.name}, Schema: {json.dumps(tool.args).replace('{', '{{').replace('}', '}}')}"
@@ -35,8 +63,27 @@ def get_tools_description(tools):
     )
 
 async def ask_human_tool(question: str) -> str:
-    print(f"Agent asks: {question}")
-    return input("Your response: ")
+    # Put the question in the queue
+    await agent_question_queue.put(question)
+    # Wait for the response from the web interface
+    response = await agent_response_queue.get()
+    return response
+
+@app.get("/agent/question")
+async def get_agent_question():
+    """Endpoint for the frontend to get the latest question from the agent"""
+    try:
+        # Try to get a question with a timeout of 30 seconds
+        question = await asyncio.wait_for(agent_question_queue.get(), timeout=30)
+        return {"question": question}
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=204, detail="No question available")
+
+@app.post("/agent/response")
+async def post_agent_response(response: AgentResponse):
+    """Endpoint for the frontend to send responses back to the agent"""
+    await agent_response_queue.put(response.response)
+    return {"status": "success"}
 
 async def create_interface_agent(client, tools):
     tools_description = get_tools_description(tools)
@@ -68,17 +115,17 @@ async def create_interface_agent(client, tools):
         ("placeholder", "{agent_scratchpad}")
     ])
 
-    # model = ChatOpenAI(
-    #     model="gpt-4.1-mini-2025-04-14",
-    #     api_key=os.getenv("OPENAI_API_KEY"),
-    #     temperature=0.3,
-    #     max_tokens=32768
-    # )
-
-    model = ChatGroq(
-        model="llama3-70b-8192",
-        temperature=0.3
+    model = ChatOpenAI(
+        model="gpt-4.1-mini-2025-04-14",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        temperature=0.3,
+        max_tokens=32768
     )
+
+    # model = ChatGroq(
+    #     model="llama3-70b-8192",
+    #     temperature=0.3
+    # )
 
     agent = create_tool_calling_agent(model, tools, prompt)
     return AgentExecutor(agent=agent, tools=tools, max_iterations=100, verbose=True, stream_runnable=False)
@@ -94,13 +141,16 @@ async def stream_agent_response(agent_executor):
                 # Handle agent actions
                 if key == "actions" and value:
                     for action in value:
+                        if action.tool == "send_message":
+                            print(f"\n🤖💬 AGENT 2 AGENT MESSAGE : {action.tool_input}")
+                            print(f"=" * 50)
                         if action.tool == "ask_human":
                             # Handle both dict and string tool_input
                             if isinstance(action.tool_input, dict):
                                 question = action.tool_input.get('question', action.tool_input)
                             else:
                                 question = action.tool_input
-                            print(f"\n🤖💬 AGENT : {question}")
+                            print(f"\n🤖💬 AGENT 2 HUMAN MESSAGE : {question}")
                             print(f"=" * 50)
                 
                 # Handle final output
@@ -148,16 +198,17 @@ async def main():
             logger.info(f"Tools Description:\n{get_tools_description(tools)}")
 
             agent_executor = await create_interface_agent(client, tools)
-            #await agent_executor.ainvoke({})
-                # Choose streaming method              
-            print("Streaming agent response...")
-            await stream_agent_response(agent_executor)
-                
-                # logger.info(f"Token usage for this run:")
-                # logger.info(f"  Prompt Tokens: {cb.prompt_tokens}")
-                # logger.info(f"  Completion Tokens: {cb.completion_tokens}")
-                # logger.info(f"  Total Tokens: {cb.total_tokens}")
-                # logger.info(f"  Total Cost (USD): ${cb.total_cost:.6f}")
+            
+            # Start the agent in the background
+            background_task = asyncio.create_task(stream_agent_response(agent_executor))
+            
+            # Start the FastAPI server
+            config = uvicorn.Config(app, host="0.0.0.0", port=8000, log_level="info")
+            server = uvicorn.Server(config)
+            await server.serve()
+            
+            # Wait for the background task to complete
+            await background_task
             
             # If we reach here, everything was successful, so break the retry loop
             break
