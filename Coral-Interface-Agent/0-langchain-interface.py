@@ -16,7 +16,7 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Dict, Any
 import uvicorn
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -45,16 +45,40 @@ query_string = urllib.parse.urlencode(params)
 MCP_SERVER_URL = f"{base_url}?{query_string}"
 AGENT_NAME = "user_interaction_agent"
 
-# Create a queue to store agent questions
+# Create queues for communication
 agent_question_queue = asyncio.Queue()
 agent_response_queue = asyncio.Queue()
+tool_status_queue = asyncio.Queue()
 
-# Pydantic models for request/response
+# Pydantic models
 class AgentResponse(BaseModel):
     response: str
 
 class AgentQuestion(BaseModel):
     question: str
+
+class ToolStatus(BaseModel):
+    tool_name: str
+    status: str
+    details: Dict[str, Any]
+
+# Keep track of the current tool being executed
+current_tool_status = {"tool_name": "", "status": "idle", "details": {}}
+
+async def update_tool_status(tool_name: str, status: str, details: Dict[str, Any] = {}):
+    global current_tool_status
+    current_tool_status = {"tool_name": tool_name, "status": status, "details": details}
+    await tool_status_queue.put(current_tool_status)
+
+@app.get("/agent/tool-status")
+async def get_tool_status():
+    """Endpoint for the frontend to get the current tool execution status"""
+    try:
+        # Try to get status with a timeout of 30 seconds
+        status = await asyncio.wait_for(tool_status_queue.get(), timeout=30)
+        return status
+    except asyncio.TimeoutError:
+        return current_tool_status
 
 def get_tools_description(tools):
     return "\n".join(
@@ -135,17 +159,21 @@ async def stream_agent_response(agent_executor):
     full_response = ""
     
     async for chunk in agent_executor.astream({}):
-        # Handle different types of chunks
         if isinstance(chunk, dict):
             for key, value in chunk.items():
-                # Handle agent actions
                 if key == "actions" and value:
                     for action in value:
+                        # Update tool status when a tool is being executed
+                        await update_tool_status(
+                            tool_name=action.tool,
+                            status="executing",
+                            details={"input": action.tool_input}
+                        )
+                        
                         if action.tool == "send_message":
                             print(f"\n🤖💬 AGENT 2 AGENT MESSAGE : {action.tool_input}")
                             print(f"=" * 50)
                         if action.tool == "ask_human":
-                            # Handle both dict and string tool_input
                             if isinstance(action.tool_input, dict):
                                 question = action.tool_input.get('question', action.tool_input)
                             else:
@@ -153,12 +181,15 @@ async def stream_agent_response(agent_executor):
                             print(f"\n🤖💬 AGENT 2 HUMAN MESSAGE : {question}")
                             print(f"=" * 50)
                 
-                # Handle final output
                 elif key == "output":
+                    # Update tool status when execution is complete
+                    await update_tool_status(
+                        tool_name="",
+                        status="idle",
+                        details={"output": str(value)}
+                    )
                     full_response += str(value)
-        
         else:
-            # Handle non-dict chunks silently
             full_response += str(chunk)
     return full_response
 

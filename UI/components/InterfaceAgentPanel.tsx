@@ -9,12 +9,19 @@ interface InterfaceAgentPanelProps {
   onMessage: (message: Omit<Message, "id" | "timestamp">) => void
 }
 
+interface ToolStatus {
+  tool_name: string
+  status: string
+  details: Record<string, any>
+}
+
 // API endpoint configuration
 const API_ENDPOINT = "http://localhost:8000"
 
 export default function InterfaceAgentPanel({ messages, orderItems, onMessage }: InterfaceAgentPanelProps) {
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [toolStatus, setToolStatus] = useState<ToolStatus>({ tool_name: "", status: "idle", details: {} })
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Auto-scroll to bottom when new messages are added
@@ -56,6 +63,34 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
       isPolling = false
     }
   }, [onMessage])
+
+  // Poll for tool status
+  useEffect(() => {
+    let isPolling = true;
+
+    const pollForToolStatus = async () => {
+      while (isPolling) {
+        try {
+          const response = await fetch(`${API_ENDPOINT}/agent/tool-status`)
+          
+          if (response.ok) {
+            const data = await response.json()
+            setToolStatus(data)
+          }
+        } catch (error) {
+          console.error("Error polling for tool status:", error)
+        }
+
+        // Wait before next poll
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
+    }
+
+    pollForToolStatus()
+    return () => {
+      isPolling = false
+    }
+  }, [])
 
   const sendToAPI = async (text: string) => {
     try {
@@ -116,13 +151,28 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col h-full">
-      {/* Agent Avatar */}
+      {/* Agent Avatar and Status */}
       <div className="text-center mb-6">
         <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-teal-500 rounded-full mx-auto mb-4 flex items-center justify-center">
           <div className="text-3xl">🤖</div>
         </div>
         <h2 className="text-xl font-semibold text-gray-900">Interface Agent</h2>
         <p className="text-gray-600">Text based Agent</p>
+        
+        {/* Tool Execution Status */}
+        {toolStatus.status !== "idle" && (
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+            <p className="text-sm font-medium text-blue-800">
+              Currently executing: {toolStatus.tool_name}
+            </p>
+            <div className="mt-2 text-xs text-blue-600">
+              <pre className="whitespace-pre-wrap break-words">
+                {JSON.stringify(toolStatus.details, null, 2)}
+              </pre>
+            </div>
+          </div>
+        )}
+        
         {isLoading && (
           <div className="mt-2">
             <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">Processing...</span>
