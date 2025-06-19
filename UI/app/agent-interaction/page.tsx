@@ -1,5 +1,7 @@
-import AgentInteraction from "@/components/AgentInteraction"
+"use client";
+
+import AgentInteraction from "@/components/AgentInteraction";
 
 export default function AgentInteractionPage() {
-  return <AgentInteraction />
+  return <AgentInteraction />;
 }

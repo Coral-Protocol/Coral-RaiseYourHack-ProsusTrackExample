@@ -1,15 +1,33 @@
-interface TranscriptionBubbleProps {
-  text: string
-}
+import { useTextStream } from "@livekit/components-react";
+import { AnimatePresence, motion } from "framer-motion";
 
-export default function TranscriptionBubble({ text }: TranscriptionBubbleProps) {
+export default function TranscriptionBubble() {
+  const { textStreams } = useTextStream("agent");
+  const latestTranscription = textStreams[textStreams.length - 1];
+
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-      <div className="flex items-center mb-2">
-        <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-        <span className="text-sm font-medium text-blue-800">Live Transcription</span>
-      </div>
-      <p className="text-gray-800">{text}</p>
+    <div className="w-full h-full overflow-y-auto p-4">
+      <AnimatePresence mode="popLayout">
+        {latestTranscription && (
+          <motion.div
+            key={latestTranscription.timestamp}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className={`p-4 rounded-lg mb-4 ${
+              latestTranscription.from === "agent"
+                ? "bg-blue-100 text-blue-900 ml-auto"
+                : "bg-gray-100 text-gray-900 mr-auto"
+            } max-w-[80%]`}
+          >
+            <p className="text-sm font-medium">
+              {latestTranscription.from === "agent" ? "Restaurant Assistant" : "You"}
+            </p>
+            <p className="mt-1">{latestTranscription.text}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-  )
+  );
 }

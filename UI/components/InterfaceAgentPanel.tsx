@@ -22,7 +22,9 @@ export default function InterfaceAgentPanel({ messages, orderItems, onMessage }:
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [toolStatus, setToolStatus] = useState<ToolStatus>({ tool_name: "", status: "idle", details: {} })
+  const [hasInitialized, setHasInitialized] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
 
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
