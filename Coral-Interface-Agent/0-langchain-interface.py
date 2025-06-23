@@ -139,17 +139,17 @@ async def create_interface_agent(client, tools):
         ("placeholder", "{agent_scratchpad}")
     ])
 
-    model = ChatOpenAI(
-        model="gpt-4.1-mini-2025-04-14",
-        api_key=os.getenv("OPENAI_API_KEY"),
-        temperature=0.3,
-        max_tokens=32768
-    )
-
-    # model = ChatGroq(
-    #     model="llama3-70b-8192",
-    #     temperature=0.3
+    # model = ChatOpenAI(
+    #     model="gpt-4.1-mini-2025-04-14",
+    #     api_key=os.getenv("OPENAI_API_KEY"),
+    #     temperature=0.3,
+    #     max_tokens=32768
     # )
+
+    model = ChatGroq(
+        model="llama3-70b-8192",
+        temperature=0.3
+    )
 
     agent = create_tool_calling_agent(model, tools, prompt)
     return AgentExecutor(agent=agent, tools=tools, max_iterations=100, verbose=True, stream_runnable=False)

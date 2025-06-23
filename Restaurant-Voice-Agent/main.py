@@ -12,7 +12,7 @@ from livekit.agents import JobContext, WorkerOptions, cli, mcp
 from livekit.agents.llm import function_tool
 from livekit.agents.voice import Agent, AgentSession, RunContext
 from livekit.agents.voice.room_io import RoomInputOptions
-from livekit.plugins import cartesia, deepgram, openai, silero
+from livekit.plugins import cartesia, deepgram, openai, silero, groq
 
 # from livekit.plugins import noise_cancellation
 
@@ -154,7 +154,10 @@ class Greeter(BaseAgent):
                 "- Use send_message tool to respond to external agents when they contact the restaurant\n"   
                 "- If customers want to send messages to external services, help facilitate that communication using send_message tool"
             ),
-            llm=openai.LLM(parallel_tool_calls=False),
+            #llm=openai.LLM(parallel_tool_calls=False),
+            llm=groq.LLM(
+            model="llama3-8b-8192"
+            ),
             tts=cartesia.TTS(voice=voices["greeter"]),
         )
         self.menu = menu
@@ -332,7 +335,10 @@ async def entrypoint(ctx: JobContext):
     session = AgentSession[UserData](
         userdata=userdata,
         stt=deepgram.STT(),
-        llm=openai.LLM(),
+        # llm=openai.LLM(),
+         llm=groq.LLM(
+            model="llama3-8b-8192"
+        ),
         tts=cartesia.TTS(),
         vad=silero.VAD.load(),
         max_tool_steps=5,
