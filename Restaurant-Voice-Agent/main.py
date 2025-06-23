@@ -21,6 +21,8 @@ logger.setLevel(logging.INFO)
 
 load_dotenv()
 
+base_url = os.getenv("CORAL_SSE_URL")
+agentID = os.getenv("CORAL_AGENT_ID")
 voices = {
     "greeter": "794f9389-aac1-45b6-b726-9d9369183238",
     "reservation": "156fb8d2-335b-4950-9cb3-a2d33befec77",
@@ -313,10 +315,9 @@ async def entrypoint(ctx: JobContext):
     await ctx.connect()
 
     # MCP Server configuration
-    base_url = "http://localhost:5555/devmode/exampleApplication/privkey/session1/sse"
     params = {
-        "waitForAgents": 2,
-        "agentId": "restaurant_assistant",
+        #"waitForAgents": 2,
+        "agentId": agentID,
         "agentDescription": "You are a helpful restaurant AI assistant that can handle reservations, takeaway orders, and payments."
     }
     query_string = urllib.parse.urlencode(params)

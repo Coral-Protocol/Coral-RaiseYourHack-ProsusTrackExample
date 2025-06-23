@@ -7,11 +7,98 @@ A multi-agent voice system for restaurants, enabling natural, seamless voice-bas
 
 ## Details
 - **Framework:** LiveKit Agents
-- **Tools Used:** Deepgram STT, Cartesia TTS, OpenAI LLM, Silero VAD
-- **AI Model:** GPT-4
+- **Tools Used:** Deepgram STT, Cartesia TTS, Groq LLM, Silero VAD
+- **AI Model:** Groq LLM
 - **Date Added:** January 2025
 - **License:** MIT
 - **Original Source:** [Restaurant Voice Agent System](https://github.com/livekit/agents/blob/main/examples/voice_agents/restaurant_agent.py)
+
+## Use the Agent in Orchestration
+You will need to have API keys from [Groq](https://console.groq.com/keys) and other services.
+
+### Executable Agent Definition 
+```yaml
+restaurant-voice:
+  options:
+    - name: "GROQ_API_KEY" 
+      type: "string"
+      description: "Groq API Key"
+    - name: "LIVEKIT_URL"
+      type: "string"
+      description: "LiveKit URL"
+    - name: "LIVEKIT_API_KEY"
+      type: "string"
+      description: "LiveKit API Key"
+    - name: "LIVEKIT_API_SECRET"
+      type: "string"
+      description: "LiveKit API Secret"
+    - name: "DEEPGRAM_API_KEY"
+      type: "string"
+      description: "Deepgram API Key"
+    - name: "CARTESIA_API_KEY"
+      type: "string"
+      description: "Cartesia API Key"
+  runtime:
+    type: "executable"
+    command:
+      - "bash"
+      - "-c"
+      - "cd ../Restaurant-Voice-Agent && uv sync && uv run python main.py console"
+    environment:
+      - name: "GROQ_API_KEY"
+        from: "GROQ_API_KEY"
+      - name: "LIVEKIT_URL"
+        from: "LIVEKIT_URL"
+      - name: "LIVEKIT_API_KEY"
+        from: "LIVEKIT_API_KEY"
+      - name: "LIVEKIT_API_SECRET"
+        from: "LIVEKIT_API_SECRET"
+      - name: "DEEPGRAM_API_KEY"
+        from: "DEEPGRAM_API_KEY"
+      - name: "CARTESIA_API_KEY"
+        from: "CARTESIA_API_KEY"
+```
+
+### Docker Agent Definition 
+```yaml
+voice-agent:
+  options:
+    - name: "GROQ_API_KEY"
+      type: "string"
+      description: "Groq API Key"
+    - name: "LIVEKIT_URL"
+      type: "string"
+      description: "LiveKit URL"
+    - name: "LIVEKIT_API_KEY"
+      type: "string"
+      description: "LiveKit API Key"
+    - name: "LIVEKIT_API_SECRET"
+      type: "string"
+      description: "LiveKit API Secret"
+    - name: "DEEPGRAM_API_KEY"
+      type: "string"
+      description: "Deepgram API Key"
+    - name: "CARTESIA_API_KEY"
+      type: "string"
+      description: "Cartesia API Key"
+
+  runtime:
+    type: "docker"
+    image: "coralprotocol/coral-restaurant-voice-agent:latest"
+    environment:
+      - name: "GROQ_API_KEY"
+        from: "GROQ_API_KEY"
+      - name: "LIVEKIT_URL"
+        from: "LIVEKIT_URL"
+      - name: "LIVEKIT_API_KEY"
+        from: "LIVEKIT_API_KEY"
+      - name: "LIVEKIT_API_SECRET"
+        from: "LIVEKIT_API_SECRET"
+      - name: "DEEPGRAM_API_KEY"
+        from: "DEEPGRAM_API_KEY"
+      - name: "CARTESIA_API_KEY"
+        from: "CARTESIA_API_KEY"
+```
 
 ## Use the Agent
 
@@ -23,10 +110,10 @@ Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) i
 
 ```bash
 # In a new terminal clone the repository:
-git clone https://github.com/Coral-Protocol/Restuarant-Voice-Agent.git
+git clone https://github.com/Coral-Protocol/Restaurant-Voice-Agent.git
 
 # Navigate to the project directory:
-cd Restuarant-Voice-Agent
+cd Restaurant-Voice-Agent
 # Install `uv`:
 pip install uv
 
@@ -50,7 +137,7 @@ Update `.env` with:
 - `LIVEKIT_URL`
 - `LIVEKIT_API_KEY` ([Get LiveKit API Key](https://cloud.livekit.io/))
 - `LIVEKIT_API_SECRET` ([Get LiveKit API Secret](https://cloud.livekit.io/))
-- `OPENAI_API_KEY` ([Get OpenAI API Key](https://platform.openai.com/api-keys))
+- `GROQ_API_KEY` ([Get Groq API Key](https://console.groq.com/keys))
 - `DEEPGRAM_API_KEY` ([Get Deepgram API Key](https://deepgram.com/))
 - `CARTESIA_API_KEY` ([Get Cartesia API Key](https://play.cartesia.ai/keys))
 
