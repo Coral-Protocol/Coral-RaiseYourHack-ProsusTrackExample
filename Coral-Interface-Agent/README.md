@@ -8,10 +8,49 @@ User Interaction Agent acts as the main interface for coordinating user instruct
 ## Details
 - **Framework**: LangChain
 - **Tools used**: Coral MCP Tools, ask_human Tool (human-in-the-loop)
-- **AI model**: GPT-4.1
+- **AI model**: Groq LLM
 - **Date added**: June 4, 2025
 - **License**: MIT 
 
+## Use the Agent in Orchestration
+You will need to have API keys from [Groq](https://console.groq.com/keys).
+
+### Executable Agent Definition 
+```yaml
+coral-interface:
+  options:
+    - name: "GROQ_API_KEY" 
+      type: "string"
+      description: "Groq API Key"
+  runtime:
+    type: "executable"
+    command:
+      - "bash"
+      - "-c"
+      - "cd ../Coral-Interface-Agent && uv sync && uv run python 0-langchain-interface.py"
+    environment:
+      - name: "GROQ_API_KEY"
+        from: "GROQ_API_KEY" 
+```
+
+### Docker Agent Definition 
+```yaml
+interface:
+  options:
+    - name: "GROQ_API_KEY"
+      type: "string"
+      description: "Groq API Key"
+    - name: "HUMAN_RESPONSE"
+      type: "string"
+      description: "Human response to be used in the interface agent"
+
+  runtime:
+    type: "docker"
+    image: "sd2879/coral-interface-agent:latest"
+    environment:
+      - name: "GROQ_API_KEY"
+        from: "GROQ_API_KEY" 
+```
 
 ## Use the Agent  
 
@@ -44,7 +83,7 @@ uv sync
 <details>
  
 Get the API Key:
-[OpenAI](https://platform.openai.com/api-keys)
+[Groq](https://console.groq.com/keys)
 
 
 ```bash
