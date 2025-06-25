@@ -1,8 +1,13 @@
-# Restaurant Agentic System Webapp
+# Restaurant Agentic System Webapp ([Prosus Track](https://lablab.ai/event/raise-your-hack))
 
 This project is a comprehensive restaurant voice agent system that combines [Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent) and [Restaurant Voice Agent](https://github.com/Coral-Protocol/Restaurant-Voice-Agent) to connect via coral protocol to provide an intelligent conversational experience for restaurant interactions. The agents used in this project are part of the [Awesome Agents for Multi-Agent Systems](https://github.com/Coral-Protocol/awesome-agents-for-multi-agent-systems) collection and is a working sample for [Prosus Track for Hackathon](https://lablab.ai/event/raise-your-hack).
 
-
+## Overview
+- A voice-enabled system that handles customer reservations, takeaway orders, and payments without human staff intervention
+- Uses Interface Agent to coordinate user instructions and Restaurant Voice Agent to manage real-time voice conversations across specialized functions
+- Enables natural voice interactions for complete restaurant services - from greeting and menu presentation to order processing and reservation. 
+## Set up your agents
+You can use [Awesome Agents for Multi-Agent Systems](https://github.com/Coral-Protocol/awesome-agents-for-multi-agent-systems) to get reuseable agents for a multi agent system, for this case we are using [Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent) and [Restaurant Voice Agent](https://github.com/Coral-Protocol/Restaurant-Voice-Agent).
 
 ## 🚀 Quick Start Guide
 
