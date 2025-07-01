@@ -6,6 +6,7 @@ import urllib.parse
 from dotenv import load_dotenv
 from anyio import ClosedResourceError
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain.chat_models import init_chat_model
 from langchain.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_groq import ChatGroq
@@ -33,12 +34,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 load_dotenv()
+print(os.getenv("MODEL_NAME"))
+print(os.getenv("MODEL_PROVIDER"))
+print(os.getenv("API_KEY"))
+print(os.getenv("MODEL_TEMPERATURE"))
+print(os.getenv("MODEL_TOKEN"))
 
 base_url = os.getenv("CORAL_SSE_URL")
 agentID = os.getenv("CORAL_AGENT_ID")
@@ -164,9 +169,12 @@ async def create_interface_agent(client, tools):
     #     max_tokens=32768
     # )
 
-    model = ChatGroq(
-        model="llama3-70b-8192",
-        temperature=0.3
+    model = init_chat_model(
+        model=os.getenv("MODEL_NAME", "gpt-4.1"),
+        model_provider=os.getenv("MODEL_PROVIDER", "openai"),
+        api_key=os.getenv("API_KEY"),
+        temperature=float(os.getenv("MODEL_TEMPERATURE", "0.1")),
+        max_tokens=int(os.getenv("MODEL_TOKEN", "8000"))
     )
 
     agent = create_tool_calling_agent(model, tools, prompt)
