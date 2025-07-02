@@ -6,7 +6,7 @@
 - Agents: [Interface Agent](https://github.com/Coral-Protocol/Interface-Agent-for-Webapp) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Restaurant-Voice-Agent)
 - [Demo Video for custom UI](https://drive.google.com/file/d/1LtUfTUzV9MPEPY7b4alElDiJoml7E089/view)
 
-<details>
+
   
 ### 1. Setup Coral Server and Coral Studio
 
@@ -416,4 +416,4 @@ For speech-based interaction, you need to talk to the restaurant agent directly.
 </details>
 </details>
 </details>
-</details>
+
