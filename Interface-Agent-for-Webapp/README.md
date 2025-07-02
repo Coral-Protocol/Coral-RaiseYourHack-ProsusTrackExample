@@ -1,5 +1,7 @@
 ## [Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent)
 
+This is the modified interface agent with Fast api endpoints for the UI.
+
 User Interaction Agent is the main interface for receiving user instructions, coordinating multi-agent tasks, and logging conversations via the terminal.
 
 ## Responsibility
@@ -13,44 +15,7 @@ User Interaction Agent acts as the main interface for coordinating user instruct
 - **License**: MIT 
 
 ## Use the Agent in Orchestration
-You will need to have API keys from [Groq](https://console.groq.com/keys).
-
-### Executable Agent Definition 
-```yaml
-coral-interface:
-  options:
-    - name: "GROQ_API_KEY" 
-      type: "string"
-      description: "Groq API Key"
-  runtime:
-    type: "executable"
-    command:
-      - "bash"
-      - "-c"
-      - "cd ../Coral-Interface-Agent && uv sync && uv run python 0-langchain-interface.py"
-    environment:
-      - name: "GROQ_API_KEY"
-        from: "GROQ_API_KEY" 
-```
-
-### Docker Agent Definition 
-```yaml
-interface:
-  options:
-    - name: "GROQ_API_KEY"
-      type: "string"
-      description: "Groq API Key"
-    - name: "HUMAN_RESPONSE"
-      type: "string"
-      description: "Human response to be used in the interface agent"
-
-  runtime:
-    type: "docker"
-    image: "sd2879/coral-interface-agent:latest"
-    environment:
-      - name: "GROQ_API_KEY"
-        from: "GROQ_API_KEY" 
-```
+You will need to have API keys from [Openai](https://platform.openai.com/api-keys)/[Groq](https://console.groq.com/keys).
 
 ## Use the Agent  
 
@@ -63,10 +28,10 @@ Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) i
 
 ```bash
 # In a new terminal clone the repository:
-git clone https://github.com/Coral-Protocol/Coral-Interface-Agent.git
+git clone https://github.com/Coral-Protocol/Interface-Agent-for-Webapp.git
 
 # Navigate to the project directory:
-cd Coral-Interface-Agent
+cd Interface-Agent-for-Webapp
 
 # Install `uv`:
 pip install uv
