@@ -35,6 +35,10 @@ Your app should build a reusable user profile based on in-app conversations. Thi
 
 All of which offer free tiers for testing.
 
+## About Coral Protocol 🪸
+
+[Coral Protocol](https://www.coralprotocol.org/) is an open standard for AI agent collaboration. It builds on MCP to let agents communicate, share tasks, and coordinate through a structured messaging layer with threads and mentions. The [Coral Server](https://github.com/Coral-Protocol/coral-server) powers this ecosystem, enabling scalable, open-source AI collaboration.
+
 ### Prosus Example: Agentic Voice Restaurant Ordering Webapp
 
 - Restaurant voice agent system to provide an intelligent conversational experience for restaurant interactions.
