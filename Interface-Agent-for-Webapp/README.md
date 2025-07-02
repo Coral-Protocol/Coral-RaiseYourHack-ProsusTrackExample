@@ -76,7 +76,7 @@ cp -r .env_sample .env
 
 ```bash
 # Run the agent using `uv`:
-uv run python 0-langchain-interface.py
+uv run python main.py
 ```
 </details>
 
