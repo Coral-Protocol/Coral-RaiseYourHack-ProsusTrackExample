@@ -427,3 +427,7 @@ For speech-based interaction, you need to talk to the restaurant agent directly.
 </details>
 
 
+### Support 
+
+For support: [Discord](https://discord.com/invite/Xjm892dtt3)
+
