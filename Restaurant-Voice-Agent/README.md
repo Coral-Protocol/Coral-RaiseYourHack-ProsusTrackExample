@@ -7,8 +7,8 @@ A multi-agent voice system for restaurants, enabling natural, seamless voice-bas
 
 ## Details
 - **Framework:** LiveKit Agents
-- **Tools Used:** Deepgram STT, Cartesia TTS, Groq LLM, Silero VAD
-- **AI Model:** Groq LLM
+- **Tools Used:** Deepgram STT, Cartesia TTS, OpenAI LLM, Silero VAD
+- **AI Model:** GPT-4
 - **Date Added:** January 2025
 - **License:** MIT
 - **Original Source:** [Restaurant Voice Agent System](https://github.com/livekit/agents/blob/main/examples/voice_agents/restaurant_agent.py)
@@ -23,15 +23,27 @@ Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) i
 
 ```bash
 # In a new terminal clone the repository:
-git clone https://github.com/Coral-Protocol/Restaurant-Voice-Agent.git
+git clone https://github.com/Coral-Protocol/Restuarant-Voice-Agent.git
 
 # Navigate to the project directory:
-cd Restaurant-Voice-Agent
+cd Restuarant-Voice-Agent
 # Install `uv`:
 pip install uv
 
 # Install dependencies from `pyproject.toml` using `uv`:
 uv sync
+```
+
+### Troubleshooting
+
+If you encounter errors related to post_writer, run these commands:
+
+```bash
+# Copy the client sse.py from utils to mcp package (Linux/ Mac)
+cp -r utils/sse.py .venv/lib/python3.13/site-packages/mcp/client/sse.py
+
+# OR Copy this for Windows
+cp -r utils\sse.py .venv\Lib\site-packages\mcp\client\sse.py
 ```
 
 </details>
@@ -50,7 +62,7 @@ Update `.env` with:
 - `LIVEKIT_URL`
 - `LIVEKIT_API_KEY` ([Get LiveKit API Key](https://cloud.livekit.io/))
 - `LIVEKIT_API_SECRET` ([Get LiveKit API Secret](https://cloud.livekit.io/))
-- `GROQ_API_KEY` ([Get Groq API Key](https://console.groq.com/keys))
+- `OPENAI_API_KEY` ([Get OpenAI API Key](https://platform.openai.com/api-keys))
 - `DEEPGRAM_API_KEY` ([Get Deepgram API Key](https://deepgram.com/))
 - `CARTESIA_API_KEY` ([Get Cartesia API Key](https://play.cartesia.ai/keys))
 

@@ -21,8 +21,25 @@ logger.setLevel(logging.INFO)
 
 load_dotenv()
 
-base_url = os.getenv("CORAL_SSE_URL")
-agentID = os.getenv("CORAL_AGENT_ID")
+def get_llm_instance(parallel_tool_calls=None):
+    """Get LLM instance based on environment configuration"""
+    llm_provider = os.getenv("LLM_PROVIDER", "openai").lower()
+    llm_model = os.getenv("LLM_MODEL", "gpt-4o-mini")
+    api_key = os.getenv("API_KEY")
+    
+    kwargs = {}
+    if parallel_tool_calls is not None:
+        kwargs["parallel_tool_calls"] = parallel_tool_calls
+    
+    if llm_provider == "openai":
+        return openai.LLM(model=llm_model, api_key=api_key, **kwargs)
+    elif llm_provider == "groq":
+        return groq.LLM(model=llm_model, api_key=api_key, **kwargs)
+    else:
+        # Add more providers as needed
+        logger.warning(f"Unsupported LLM provider: {llm_provider}. Falling back to OpenAI.")
+        return openai.LLM(model=llm_model, api_key=api_key, **kwargs)
+
 voices = {
     "greeter": "794f9389-aac1-45b6-b726-9d9369183238",
     "reservation": "156fb8d2-335b-4950-9cb3-a2d33befec77",
@@ -156,10 +173,7 @@ class Greeter(BaseAgent):
                 "- Use send_message tool to respond to external agents when they contact the restaurant\n"   
                 "- If customers want to send messages to external services, help facilitate that communication using send_message tool"
             ),
-            #llm=openai.LLM(parallel_tool_calls=False),
-            llm=groq.LLM(
-            model="llama3-8b-8192"
-            ),
+            llm=get_llm_instance(parallel_tool_calls=False),
             tts=cartesia.TTS(voice=voices["greeter"]),
         )
         self.menu = menu
@@ -315,9 +329,10 @@ async def entrypoint(ctx: JobContext):
     await ctx.connect()
 
     # MCP Server configuration
+    base_url = os.getenv("CORAL_SSE_URL")
     params = {
-        #"waitForAgents": 2,
-        "agentId": agentID,
+       # "waitForAgents": 2,
+        "agentId": os.getenv("CORAL_AGENT_ID"),
         "agentDescription": "You are a helpful restaurant AI assistant that can handle reservations, takeaway orders, and payments."
     }
     query_string = urllib.parse.urlencode(params)
@@ -336,10 +351,7 @@ async def entrypoint(ctx: JobContext):
     session = AgentSession[UserData](
         userdata=userdata,
         stt=deepgram.STT(),
-        # llm=openai.LLM(),
-         llm=groq.LLM(
-            model="llama3-8b-8192"
-        ),
+        llm=get_llm_instance(),
         tts=cartesia.TTS(),
         vad=silero.VAD.load(),
         max_tool_steps=5,
@@ -350,12 +362,16 @@ async def entrypoint(ctx: JobContext):
                 client_session_timeout_seconds=100,
             ),
         ],
+        # to use realtime model, replace the stt, llm, tts and vad with the following
+        # llm=openai.realtime.RealtimeModel(voice="alloy"),
     )
 
     await session.start(
         agent=userdata.agents["greeter"],
         room=ctx.room,
-        room_input_options=RoomInputOptions(),
+        room_input_options=RoomInputOptions(
+            # noise_cancellation=noise_cancellation.BVC(),
+        ),
     )
 
     # await agent.say("Welcome to our restaurant! How may I assist you today?")
