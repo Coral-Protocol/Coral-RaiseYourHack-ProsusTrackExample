@@ -1,4 +1,41 @@
-### Prosus Track: Restaurant Agentic System Webapp
+# PROSUS CHALLENGE
+
+Create an e-commerce application that uses AI agents to let users perform one or more of the following tasks:
+
+- **Food ordering:** Restaurant discovery, menu browsing, order placement  
+- **Travel Booking:** Flight searches, hotel reservations, itinerary planning  
+- **Product Marketplace:** New and second-hand item purchases  
+
+Your app should build a reusable user profile based on in-app conversations. This profile will help personalize experiences across different activities and should be stored as a knowledge graph.
+
+## Bonus Challenges
+
+- Build a voice-first user interface  
+- Support multimodal input for richer user interactions  
+- Store the user profile as a knowledge graph  
+
+## To Succeed in This Challenge
+
+- Focus on core functionality – show live, working features (live demo, not just slides!)  
+- Use pre-trained models and APIs to save time  
+- Keep your code modular and simple for easier debugging  
+
+## Judges Will Focus On
+
+- Technical Execution – Does the MVP work reliably?  
+- AI Integration – How creatively and effectively is AI used?  
+- Originality & Impact – How novel is the idea, and does it solve a real-world problem?  
+- Agentic Capabilities – How useful, stable, and advanced are the agent-powered features?  
+
+⚠️ We encourage participants to explore a variety of technologies for this challenge, including:  
+
+- SERP API  
+- Tavily  
+- Twilio  
+
+All of which offer free tiers for testing.
+
+### Prosus Example: Agentic Voice Restaurant Ordering Webapp
 
 - Restaurant voice agent system to provide an intelligent conversational experience for restaurant interactions.
 - A voice-enabled system that handles customer reservations, takeaway orders, and payments without human staff intervention
@@ -6,8 +43,6 @@
 - Agents: [Interface Agent](https://github.com/Coral-Protocol/Interface-Agent-for-Webapp) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Restaurant-Voice-Agent)
 - [Demo Video for custom UI](https://drive.google.com/file/d/1LtUfTUzV9MPEPY7b4alElDiJoml7E089/view)
 
-
-  
 ### 1. Setup Coral Server and Coral Studio
 
 <details>
