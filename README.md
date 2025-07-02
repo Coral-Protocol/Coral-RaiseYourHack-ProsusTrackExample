@@ -150,9 +150,7 @@ yarn dev
 </details>
 
 ### 3. Run the Agents:
-
-<details>
- <summary>You can run it in three modes but Dev mode is preferable for begginer</summary>
+You can run it in three modes but Dev mode is preferable for begginer
 
 <details>
 
@@ -264,7 +262,8 @@ registry:
 
 <details>
   <summary>Option 2:Dev Mode(Running on terminal) </summary>
-  - The Dev Mode allows the Coral Server and all agents to be seaprately running on each terminal without UI support.  
+ 
+- The Dev Mode allows the Coral Server and all agents to be seaprately running on each terminal without UI support.  
 
 - Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) is running on your system and run below commands in separate terminals.
 
@@ -450,5 +449,5 @@ For speech-based interaction, you need to talk to the restaurant agent directly.
 ```
 </details>
 </details>
-</details>
+
 
