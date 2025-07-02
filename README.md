@@ -1,4 +1,4 @@
-# PROSUS CHALLENGE
+## PROSUS CHALLENGE
 
 Create an e-commerce application that uses AI agents to let users perform one or more of the following tasks:
 
