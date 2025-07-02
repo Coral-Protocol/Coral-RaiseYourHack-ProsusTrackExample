@@ -279,7 +279,7 @@ Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) i
 
 ```bash
 # Clone the repository
-git clone https://github.com/Coral-Protocol/Coral-RaiseYourHack-ProsusTrackExample
+git clone https://github.com/Coral-Protocol/Prosus-Agentic-Voice-Restaurant-Webapp
 
 # Install `uv`:
 pip install uv
