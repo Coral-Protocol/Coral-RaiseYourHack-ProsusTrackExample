@@ -22,9 +22,6 @@ Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) i
 <details>
 
 ```bash
-# In a new terminal clone the repository:
-git clone https://github.com/Coral-Protocol/Restuarant-Voice-Agent.git
-
 # Navigate to the project directory:
 cd Restuarant-Voice-Agent
 # Install `uv`:
