@@ -17,7 +17,7 @@
 
 The Prosus Challenge track is centered around building an AI-powered e-commerce application using the Coral Protocol, an open, standardized framework for AI agent collaboration. Coral enables multiple AI agents to communicate, share tasks, and coordinate through a structured messaging layer with threads and mentions. In this track, participants will leverage Coral Server along with specialized agents such as the Interface Agent to handle user instructions and the Restaurant Voice Agent for real-time, voice-based interactions. The solution integrates technologies like Groq and LiveKit to power AI, speech, and communication capabilities, with an optional custom UI to deliver a seamless user experience.
 - Agents: [Interface Agent](https://github.com/Coral-Protocol/Interface-Agent-for-Webapp) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Restaurant-Voice-Agent)
-- [Demo Video for custom UI](https://drive.google.com/file/d/1LtUfTUzV9MPEPY7b4alElDiJoml7E089/view)
+- [Demo Video for custom UI](https://drive.google.com/file/d/1aUT95e2FwuBFzrCZJsMhcwcqMF9VqHV4/view?usp=sharing)
 
 ### 1. Setup Coral Server and Coral Studio
 
