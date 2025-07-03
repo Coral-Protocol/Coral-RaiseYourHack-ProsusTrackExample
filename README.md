@@ -10,14 +10,16 @@
 
 - **Run the Agents**  
   Three available options to run agents:
-  - Executable Mode with Coral Studio Orchestrator  
   - Dev Mode (terminal-based) for easier debugging  
-  - Custom UI Mode with independent frontend  
+  - Custom UI Mode with independent frontend
+  - Dev Mode with Coral Studio UI
+  
 ## Introduction
 
 The Prosus Challenge track is centered around building an AI-powered e-commerce application using the Coral Protocol, an open, standardized framework for AI agent collaboration. Coral enables multiple AI agents to communicate, share tasks, and coordinate through a structured messaging layer with threads and mentions. In this track, participants will leverage Coral Server along with specialized agents such as the Interface Agent to handle user instructions and the Restaurant Voice Agent for real-time, voice-based interactions. The solution integrates technologies like Groq and LiveKit to power AI, speech, and communication capabilities, with an optional custom UI to deliver a seamless user experience.
 - Agents: [Interface Agent](https://github.com/Coral-Protocol/Coral-InterfaceAgentForWebapp) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Coral-RestaurantVoice-Agent)
-- [Demo Video for custom UI](https://drive.google.com/file/d/1aUT95e2FwuBFzrCZJsMhcwcqMF9VqHV4/view?usp=sharing)
+- [Demo Video for Running with custom UI](https://drive.google.com/file/d/1eErTy2j4U-lXbkJVukoeHmn0aWCN04YJ/view)
+- [Demo Video Output of Custom UI](https://drive.google.com/file/d/1aUT95e2FwuBFzrCZJsMhcwcqMF9VqHV4/view?usp=sharing)
 
 ### 1. Setup Coral Server and Coral Studio
 
@@ -119,125 +121,16 @@ yarn dev
 
 - Terminate the Coral Server and Coral Studio connections from above and start below steps.
 - In this example, we are using the agents: [Coral Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent) and [Restaurant Agent](https://github.com/Coral-Protocol/Coral-RestaurantVoice-Agent).  
-- Please click on the link and set up the agents by following the setup instructions in the repository.  
-- Check the output below to see how the terminal will look after succesfull installation, keep in mind the directory you are at while doing `uv sync`.
-
-
+- Please click on the link and set up the agents by following the setup instructions in the repository.
+  
 </details>
 
 ### 3. Run the Agents:
-You can run it in three modes but Dev mode is preferable for begginer
+You can run it in three modes but Dev mode is preferable for beginner
+
 
 <details>
-
-
-<summary>Option 1: Agents running on executable with orchestrator on Coral-Studio:</summary>
-
-- The Executable Mode is part of the Coral Protocol Orchestrator which works with [Coral Studio UI](https://github.com/Coral-Protocol/coral-studio).  
-
-- Checkout: [How to Build a Multi-Agent System with Awesome Open Source Agents using Coral Protocol](https://github.com/Coral-Protocol/existing-agent-sessions-tutorial-private-temp).  
-
-- Update the file: `coral-server/src/main/resources/application.yaml` with the details below. 
-
-```bash
-# Replace "root" with your project directory if different
-
-applications:
-  - id: "app"
-    name: "Default Application"
-    description: "Default application for testing"
-    privacyKeys:
-      - "default-key"
-      - "public"
-      - "priv"
-
-registry:
-
-  interface:
-    options:
-      - name: "API_KEY"
-        type: "string"
-        description: "API key for the service"
-    runtime:
-      type: "executable"
-      command: ["bash", "-c", "/root/Coral-Interface-Agent/run_agent.sh main.py"]
-      environment:
-        - name: "API_KEY"
-          from: "API_KEY"
-        - name: "MODEL_NAME"
-          value: "gpt-4.1"
-        - name: "MODEL_PROVIDER"
-          value: "openai"
-        - name: "MODEL_TOKEN"
-          value: "16000"
-        - name: "MODEL_TEMPERATURE"
-          value: "0.3"
-
-  restaurant:
-    options:
-      - name: "API_KEY"
-        type: "string"
-        description: "API key for the service"
-      - name: "LIVEKIT_URL"
-        type: "string"
-        description: "LIVEKIT URL"
-      - name: "LIVEKIT_API_KEY"
-        type: "string"
-        description: "LIVEKIT API Key"
-      - name: "LIVEKIT_API_SECRET"
-        type: "string"
-        description: "LIVEKIT API Secret"
-      - name: "DEEPGRAM_API_KEY"
-        type: "string"
-        description: "Deepgram API Key"
-      - name: "CARTESIA_API_KEY"
-        type: "string"
-        description: "Cartesia API Key"
-    runtime:
-      type: "executable"
-      command: ["bash", "-c", "/root/Coral-RestaurantVoice-Agent/run_agent.sh main.py console"]
-      environment:
-        - name: "MODEL_NAME"
-          value: "gpt-4.1"
-        - name: "MODEL_PROVIDER"
-          value: "openai"
-        - name: "API_KEY"
-          from: "API_KEY"
-        - name: "MODEL_TOKEN"
-          value: "16000"
-        - name: "MODEL_TEMPERATURE"
-          value: "0.3"
-        - name: "LLM_PROVIDER"
-          value: "openai"
-        - name: "LLM_MODEL"
-          value: "gpt-4o-mini"
-        - name: "OPENAI_API_KEY"
-          from: "API_KEY"
-        - name: "LIVEKIT_URL"
-          from: "LIVEKIT_URL"
-        - name: "LIVEKIT_API_KEY"
-          from: "LIVEKIT_API_KEY"
-        - name: "LIVEKIT_API_SECRET"
-          from: "LIVEKIT_API_SECRET"
-        - name: "DEEPGRAM_API_KEY"
-          from: "DEEPGRAM_API_KEY"
-        - name: "CARTESIA_API_KEY"
-          from: "CARTESIA_API_KEY"
-
-```
-
-- Run the [Coral Server](https://github.com/Coral-Protocol/coral-server) and [Coral Studio](https://github.com/Coral-Protocol/coral-studio). 
-
-- You do not need to set up the `.env` in the project directory for running in this mode; it will be captured through the variables below.  
-
-- After the agents are loaded properly, you will see "2 agents" connected. Proceed ahead with "Select Session", add the agents, api key and esure to add both the Custom Tools to the Interface Agent.
-
-![Prosus Instance](images/prosus_orchestrator.png) 
-
-</details>
-
-<details>
-  <summary>Option 2:Dev Mode(Running on terminal) </summary>
+  <summary>Option 1:Dev Mode(Running on terminal) </summary>
  
 - The Dev Mode allows the Coral Server and all agents to be seaprately running on each terminal without UI support.  
 
@@ -271,7 +164,7 @@ uv run main.py console
 <details>
 
 
-<summary>Option 3: Agents running without Coral-Studio and using custom UI:</summary>
+<summary>Option 2: Agents running without Coral-Studio and using custom UI:</summary>
 
 Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) is running on your system
 
@@ -307,7 +200,7 @@ uv sync
 
 ##### For Coral Interface Agent
 Get the API Key:
-[Openai](https://platform.openai.com/api-keys)
+[Openai](https://platform.openai.com/api-keys)/[Groq](https://console.groq.com/keys)
 
 Create a `.env` file in the `Coral-InterfaceAgentForWebapp` directory based on the `.env_sample` file:
 ```bash
@@ -318,14 +211,16 @@ cp -r .env_sample .env
 
 ##### For Restaurant Agent
 Get the api key
-GROQ_API_KEY=[Groq](https://console.groq.com/keys).
+API_KEY=[Openai](https://platform.openai.com/api-keys)/[Groq](https://console.groq.com/keys).
 
 Note:
 If you want to use cloud services by Livekit then use [Livekit Cloud](https://cloud.livekit.io/) for these api keys and url but for Self hosting you can check out there documentation for [Self Hosting](https://docs.livekit.io/home/self-hosting/local/).
 
-LIVEKIT_API_KEY=your_livekit_api_key_here 
-LIVEKIT_API_SECRET=your_livekit_api_secret_here  
-LIVEKIT_URL=your_livekit_url_here 
+```LIVEKIT_API_KEY```=your_livekit_api_key_here 
+
+```LIVEKIT_API_SECRET```=your_livekit_api_secret_here  
+
+```LIVEKIT_URL```=your_livekit_url_here 
 
 Create a `.env` file in the `Coral-RestaurantVoice-Agent` directory based on the `.env.example` file:
 ```bash
@@ -424,8 +319,18 @@ When using the interface agent, it will communicate with the restaurant agent th
 For speech-based interaction, you need to talk to the restaurant agent directly.
 ```
 </details>
-</details>
 
+</details>
+<details>
+
+<summary>Option 3:Running in Dev Mode with Coral Studio</summary>
+
+If you want to run the Agent using [Coral-Studio UI](https://github.com/Coral-Protocol/coral-studio) you can do so but it may not support Voice input and outputs from the UI and only the messages sent using Coral tools will be visible.You
+clone it and run it according to the instructions in the readme and run these two agents in your terminal.
+
+[Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Coral-RestaurantVoice-Agent)
+
+</details>
 
 ### Support 
 
