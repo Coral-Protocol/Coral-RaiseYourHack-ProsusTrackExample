@@ -16,7 +16,7 @@
 ## Introduction
 
 The Prosus Challenge track is centered around building an AI-powered e-commerce application using the Coral Protocol, an open, standardized framework for AI agent collaboration. Coral enables multiple AI agents to communicate, share tasks, and coordinate through a structured messaging layer with threads and mentions. In this track, participants will leverage Coral Server along with specialized agents such as the Interface Agent to handle user instructions and the Restaurant Voice Agent for real-time, voice-based interactions. The solution integrates technologies like Groq and LiveKit to power AI, speech, and communication capabilities, with an optional custom UI to deliver a seamless user experience.
-- Agents: [Interface Agent](https://github.com/Coral-Protocol/Interface-Agent-for-Webapp) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Restaurant-Voice-Agent)
+- Agents: [Interface Agent](https://github.com/Coral-Protocol/Interface-Agent-for-Webapp) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Coral-RestaurantVoice-Agent)
 - [Demo Video for custom UI](https://drive.google.com/file/d/1aUT95e2FwuBFzrCZJsMhcwcqMF9VqHV4/view?usp=sharing)
 
 ### 1. Setup Coral Server and Coral Studio
@@ -118,7 +118,7 @@ yarn dev
 <details>  
 
 - Terminate the Coral Server and Coral Studio connections from above and start below steps.
-- In this example, we are using the agents: [Coral Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent) and [Restaurant Agent](https://github.com/Coral-Protocol/Restaurant-Voice-Agent).  
+- In this example, we are using the agents: [Coral Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent) and [Restaurant Agent](https://github.com/Coral-Protocol/Coral-RestaurantVoice-Agent).  
 - Please click on the link and set up the agents by following the setup instructions in the repository.  
 - Check the output below to see how the terminal will look after succesfull installation, keep in mind the directory you are at while doing `uv sync`.
 
@@ -195,7 +195,7 @@ registry:
         description: "Cartesia API Key"
     runtime:
       type: "executable"
-      command: ["bash", "-c", "/root/Restaurant-Voice-Agent/run_agent.sh main.py console"]
+      command: ["bash", "-c", "/root/Coral-RestaurantVoice-Agent/run_agent.sh main.py console"]
       environment:
         - name: "MODEL_NAME"
           value: "gpt-4.1"
@@ -261,7 +261,7 @@ Run the Restaurant Agent
 
 ```bash
 # cd to directory
-cd Restaurant-Voice-Agent
+cd Coral-RestaurantVoice-Agent
 
 # Run the agent using `uv`:
 uv run main.py console
@@ -297,7 +297,7 @@ uv sync
 ##### For Restaurant Agent
 ```bash
 # Navigate to the monzo agent directory
-cd Restaurant-Voice-Agent
+cd Coral-RestaurantVoice-Agent
 
 # Install dependencies from `pyproject.toml` using `uv`:
 uv sync
@@ -327,9 +327,9 @@ LIVEKIT_API_KEY=your_livekit_api_key_here
 LIVEKIT_API_SECRET=your_livekit_api_secret_here  
 LIVEKIT_URL=your_livekit_url_here 
 
-Create a `.env` file in the `Restaurant-Voice-Agent` directory based on the `.env.example` file:
+Create a `.env` file in the `Coral-RestaurantVoice-Agent` directory based on the `.env.example` file:
 ```bash
-cd Restaurant-Voice-Agent
+cd Coral-RestaurantVoice-Agent
 cp -r env.example .env
 # Edit .env with your specific configuration
 ```
@@ -366,7 +366,7 @@ uv run main.py
 
 #### Terminal 2: Start Restaurant Voice Agent
 ```bash
-cd Restaurant-Voice-Agent
+cd Coral-RestaurantVoice-Agent
 uv run main.py dev
 ```
 
