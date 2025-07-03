@@ -10,7 +10,7 @@ User Interaction Agent acts as the main interface for coordinating user instruct
 ## Details
 - **Framework**: LangChain
 - **Tools used**: Coral MCP Tools, ask_human Tool (human-in-the-loop)
-- **AI model**: Groq LLM
+- **AI model**: OpenAi/Groq LLM
 - **Date added**: June 4, 2025
 - **License**: MIT 
 
@@ -28,10 +28,10 @@ Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) i
 
 ```bash
 # In a new terminal clone the repository:
-git clone https://github.com/Coral-Protocol/Interface-Agent-for-Webapp.git
+git clone https://github.com/Coral-Protocol/Coral-InterfaceAgentForWebapp.git
 
 # Navigate to the project directory:
-cd Interface-Agent-for-Webapp
+cd Coral-InterfaceAgentForWebapp
 
 # Install `uv`:
 pip install uv
@@ -60,7 +60,7 @@ cp -r utils\sse.py .venv\Lib\site-packages\mcp\client\sse.py
 <details>
  
 Get the API Key:
-[Groq](https://console.groq.com/keys)
+ [Openai](https://platform.openai.com/api-keys)/[Groq](https://console.groq.com/keys)
 
 
 ```bash
@@ -70,13 +70,13 @@ cp -r .env_sample .env
 </details>
 
 
-### 3. Run Agent
+### 3. Run Agent in Dev Mode
 
 <details>
 
 ```bash
 # Run the agent using `uv`:
-uv run python main.py
+uv run main.py
 ```
 </details>
 
