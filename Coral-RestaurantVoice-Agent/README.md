@@ -7,8 +7,7 @@ A multi-agent voice system for restaurants, enabling natural, seamless voice-bas
 
 ## Details
 - **Framework:** LiveKit Agents
-- **Tools Used:** Deepgram STT, Cartesia TTS, OpenAI LLM, Silero VAD
-- **AI Model:** GPT-4
+- **Tools Used:** Deepgram STT, Cartesia TTS, OpenAI/Groq LLM, Silero VAD
 - **Date Added:** January 2025
 - **License:** MIT
 - **Original Source:** [Restaurant Voice Agent System](https://github.com/livekit/agents/blob/main/examples/voice_agents/restaurant_agent.py)
@@ -22,8 +21,11 @@ Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) i
 <details>
 
 ```bash
+# In a new terminal clone the repository:
+git clone https://github.com/Coral-Protocol/Coral-RestaurantVoice-Agent.git
+
 # Navigate to the project directory:
-cd Restuarant-Voice-Agent
+cd Coral-RestaurantVoice-Agent
 # Install `uv`:
 pip install uv
 
@@ -59,18 +61,21 @@ Update `.env` with:
 - `LIVEKIT_URL`
 - `LIVEKIT_API_KEY` ([Get LiveKit API Key](https://cloud.livekit.io/))
 - `LIVEKIT_API_SECRET` ([Get LiveKit API Secret](https://cloud.livekit.io/))
-- `OPENAI_API_KEY` ([Get OpenAI API Key](https://platform.openai.com/api-keys))
 - `DEEPGRAM_API_KEY` ([Get Deepgram API Key](https://deepgram.com/))
 - `CARTESIA_API_KEY` ([Get Cartesia API Key](https://play.cartesia.ai/keys))
+- `API_KEY` ([Get OpenAI API Key](https://platform.openai.com/api-keys)) /([Get GROQ API Key](https://console.groq.com/keys))
+- configure the LLM model you want to use
 
 </details>
 
-## 3. Run Agent
+## 3. Run Agent in Dev Mode
 <details>
 
 ```bash
 uv run python main.py console
 ```
+If you want to run the Agent using [Coral-Studio UI](https://github.com/Coral-Protocol/coral-studio) you can do so but it may not support Voice input and outputs from the UI and only the messages sent using Coral tools will be visible.You
+clone it and run it according to the instructions in the readme and run this agent in your terminal.
 
 </details>
 
@@ -116,9 +121,9 @@ Handles payments - calculates expenses, collects contact info and credit card de
 5. Provide payment information and complete transaction
 
 </details>
+</details>
 
 ## Creator Details
 - **Name:** Ahsen Tahir
 - **Affiliation**: Coral Protocol
 - **Contact**: [Discord](https://discord.com/invite/Xjm892dtt3)
-
