@@ -16,7 +16,7 @@
 ## Introduction
 
 The Prosus Challenge track is centered around building an AI-powered e-commerce application using the Coral Protocol, an open, standardized framework for AI agent collaboration. Coral enables multiple AI agents to communicate, share tasks, and coordinate through a structured messaging layer with threads and mentions. In this track, participants will leverage Coral Server along with specialized agents such as the Interface Agent to handle user instructions and the Restaurant Voice Agent for real-time, voice-based interactions. The solution integrates technologies like Groq and LiveKit to power AI, speech, and communication capabilities, with an optional custom UI to deliver a seamless user experience.
-- Agents: [Interface Agent](https://github.com/Coral-Protocol/Interface-Agent-for-Webapp) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Coral-RestaurantVoice-Agent)
+- Agents: [Interface Agent](https://github.com/Coral-Protocol/Coral-InterfaceAgentForWebapp) | [Restaurant Voice Agent](https://github.com/Coral-Protocol/Coral-RestaurantVoice-Agent)
 - [Demo Video for custom UI](https://drive.google.com/file/d/1aUT95e2FwuBFzrCZJsMhcwcqMF9VqHV4/view?usp=sharing)
 
 ### 1. Setup Coral Server and Coral Studio
@@ -288,7 +288,7 @@ pip install uv
 ##### For Coral Interface Agent
 ```bash
 # Navigate to the interface agent agent directory
-cd Interface-Agent-for-Webapp
+cd Coral-InterfaceAgentForWebapp
 
 # Install dependencies from `pyproject.toml` using `uv`:
 uv sync
@@ -309,9 +309,9 @@ uv sync
 Get the API Key:
 [Openai](https://platform.openai.com/api-keys)
 
-Create a `.env` file in the `Interface-Agent-for-Webapp` directory based on the `.env_sample` file:
+Create a `.env` file in the `Coral-InterfaceAgentForWebapp` directory based on the `.env_sample` file:
 ```bash
-cd Interface-Agent-for-Webapp
+cd Coral-InterfaceAgentForWebapp
 cp -r .env_sample .env
 # Edit .env with your specific configuration
 ```
@@ -360,7 +360,7 @@ Start all three components in their respective terminals:
 
 #### Terminal 1: Start Coral Interface Agent
 ```bash
-cd Interface-Agent-for-Webapp
+cd Coral-InterfaceAgentForWebapp
 uv run main.py
 ```
 
