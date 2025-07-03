@@ -130,7 +130,7 @@ You can run it in three modes but Dev mode is preferable for beginner
 
 
 <details>
-  <summary>Option 1:Dev Mode(Running on terminal) </summary>
+  <summary>Option 1: Dev Mode(Running on terminal) </summary>
  
 - The Dev Mode allows the Coral Server and all agents to be seaprately running on each terminal without UI support.  
 
@@ -323,7 +323,7 @@ For speech-based interaction, you need to talk to the restaurant agent directly.
 </details>
 <details>
 
-<summary>Option 3:Running in Dev Mode with Coral Studio</summary>
+<summary>Option 3: Running in Dev Mode with Coral Studio</summary>
 
 If you want to run the Agent using [Coral-Studio UI](https://github.com/Coral-Protocol/coral-studio) you can do so but it may not support Voice input and outputs from the UI and only the messages sent using Coral tools will be visible.You
 clone it and run it according to the instructions in the readme and run these two agents in your terminal.
