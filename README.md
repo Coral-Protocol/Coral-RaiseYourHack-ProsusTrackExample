@@ -1,6 +1,8 @@
 # Prosus: Agentic Voice Restaurant Ordering Webapp with Groq & LiveKit
  This guide helps you build an AI-powered e-commerce app for the Prosus Challenge using Coral Protocol and multi-agent collaboration. Follow step-by-step setup instructions for agents, server, and UI.
 
+![Agentimage](https://github.com/Coral-Protocol/awesome-agents-for-multi-agent-systems/blob/main/images/Coral-RestaurantVoice-Agent.png)
+
 ## Outline
 - **Setup Coral Server and Coral Studio**  
   Step-by-step guide to install and run Coral Server and Coral Studio with necessary dependencies (Java, Yarn, Node.js).
